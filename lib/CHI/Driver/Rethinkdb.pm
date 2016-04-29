@@ -2,7 +2,7 @@ package CHI::Driver::Rethinkdb;
 
 use Moose;
 use Moose::Util::TypeConstraints;
-use CHI::Driver;
+use Carp qw(croak);
 
 use DBURKE::Rethink;
 
@@ -19,7 +19,7 @@ extends 'CHI::Driver';
 has r => (is => 'ro', isa  => 'DBURKE::Rethink', lazy => 1, builder => '_build_r' );
 sub _build_r {
     my $self = shift;
-    DBURKE::Rethink->new(dbname => 'test2'); # get this from args somehow
+    DBURKE::Rethink->new(dbname => $self->db_name);
 }
 
 has db_name      => ( is => 'rw', isa => 'Str', default => sub { 'test2' } );
@@ -48,7 +48,7 @@ sub BUILD {
             ->run;
     
         if ($response && $response->type > 5) {
-            die $response->response->[0];
+            croak $response->response->[0]  . '(' . $response->type . ')';
         }
     }
 
@@ -58,38 +58,71 @@ sub BUILD {
 sub fetch {
     my ( $self, $key ) = @_;
 
+    my $response = $self->r->table( $self->_table )->get( $key )->run;
+
+    if ($response->type > 5) {
+        croak $response->response;
+    }
+
+    return $response->response->{data};
 }
 
 sub store {
     my ($self, $key, $data) = @_;
-    my $response = $self->r->table( $self->_table )->insert({
-        key => $key,
+
+    my $response = $self->r->table( $self->_table )->get( $key )->replace({
+        id => $key,
         data => $data
         })->run;
     if ($response->type > 5) {
-        die $response->response;
+        croak $response->response;
     }
 
+    return;
 }
 
 sub remove {
     my ( $self, $key ) = @_;
 
+    my $response = $self->r->table( $self->_table )->get( $key )->delete->run;
+
+    if ($response->type > 5) {
+        croak $response->response;
+    }
+
+    return;
 }
 
 sub clear {
     my ($self) = @_;
 
+    my $response = $self->r->table( $self->_table )->delete->run;
+
+    if ($response->type > 5) {
+        croak $response->response;
+    }
+
+    return;
 }
 
+# TODO - shows expired keys, is this fixable?
 sub get_keys {
     my ($self) = @_;
 
+    my $response = $self->r->table( $self->_table )->run;
+
+    if ($response->type > 5) {
+        croak $response->response;
+    }
+
+    my @keys = map { $_->{id} } @{ $response->response };
+    return @keys;
 }
 
 sub get_namespaces {
     my ($self) = @_;
 
+    croak 'not supported';
 }
 
 1;
