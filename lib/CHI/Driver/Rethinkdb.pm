@@ -61,7 +61,7 @@ sub fetch {
     my $response = $self->r->table( $self->_table )->get( $key )->run;
 
     if ($response->type > 5) {
-        croak $response->response;
+        croak $response->response->[0]  . '(' . $response->type . ')';
     }
 
     return $response->response->{data};
@@ -75,7 +75,7 @@ sub store {
         data => $data
         })->run;
     if ($response->type > 5) {
-        croak $response->response;
+        croak $response->response->[0]  . '(' . $response->type . ')';
     }
 
     return;
@@ -87,7 +87,7 @@ sub remove {
     my $response = $self->r->table( $self->_table )->get( $key )->delete->run;
 
     if ($response->type > 5) {
-        croak $response->response;
+        croak $response->response->[0]  . '(' . $response->type . ')';
     }
 
     return;
@@ -99,7 +99,7 @@ sub clear {
     my $response = $self->r->table( $self->_table )->delete->run;
 
     if ($response->type > 5) {
-        croak $response->response;
+        croak $response->response->[0]  . '(' . $response->type . ')';
     }
 
     return;
@@ -112,7 +112,7 @@ sub get_keys {
     my $response = $self->r->table( $self->_table )->run;
 
     if ($response->type > 5) {
-        croak $response->response;
+        croak $response->response->[0]  . '(' . $response->type . ')';
     }
 
     my @keys = map { $_->{id} } @{ $response->response };
