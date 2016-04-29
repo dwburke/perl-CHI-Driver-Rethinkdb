@@ -4,30 +4,36 @@ use Moose;
 use Moose::Util::TypeConstraints;
 use Carp qw(croak);
 
-use DBURKE::Rethink;
+use Rethinkdb;
+use Rethinkdb::IO;
 
 extends 'CHI::Driver';
 
 
-#    my $cache = CHI->new(
-#        driver         => 'Rethinkdb',
 #        port
 #        db
 #    );
 
-# TODO - refactor this
-has r => (is => 'ro', isa  => 'DBURKE::Rethink', lazy => 1, builder => '_build_r' );
-sub _build_r {
-    my $self = shift;
-    DBURKE::Rethink->new(dbname => $self->db_name);
-}
-
 has '+max_key_length'   => ( default => sub { 120 } );
 has db_name      => ( is => 'rw', isa => 'Str', default => sub { 'test2' } );
+has host         => ( is => 'rw', isa => 'Int', default => sub { 'localhost' } );
+has port         => ( is => 'rw', isa => 'Int', default => sub { 28015 } );
 has table_prefix => ( is => 'rw', isa => 'Str', default => sub { 'chi_' } );
+has rethink_io   => ( is => 'rw', isa => 'Rethinkdb::IO', lazy => 1, builder => '_build_rethink_io' );
 
 
 __PACKAGE__->meta->make_immutable;
+
+sub _build_rethink_io {
+    my $self = shift;
+    
+    my $io = Rethinkdb::IO->new;
+    $io->host( $self->host );
+    $io->port( $self->port );
+    $io->default_db( $self->db_name );
+    $io->connect;
+    $io;
+}
 
 sub _table {
     my ($self) = @_;
@@ -38,11 +44,9 @@ sub _table {
 sub BUILD {
     my ( $self, $args ) = @_;
 
-    my $r = $self->r;
-    my $response = $r
-        ->db( $self->db_name )
+    my $response = r->db( $self->db_name )
         ->table_create( $self->_table )
-        ->run;
+        ->run($self->rethink_io);
 
     if ($response && $response->type > 5) {
         unless ($response->response->[0] =~ /already exists/i) {
@@ -56,7 +60,7 @@ sub BUILD {
 sub fetch {
     my ( $self, $key ) = @_;
 
-    my $response = $self->r->table( $self->_table )->get( $key )->run;
+    my $response = r->table( $self->_table )->get( $key )->run($self->rethink_io);
 
     if ($response->type > 5) {
         croak $response->response->[0]  . '(' . $response->type . ')';
@@ -71,10 +75,10 @@ sub fetch {
 sub store {
     my ($self, $key, $data) = @_;
 
-    my $response = $self->r->table( $self->_table )->get( $key )->replace({
+    my $response = r->table( $self->_table )->get( $key )->replace({
         id => $key,
         data => $data
-        })->run;
+        })->run($self->rethink_io);
     if ($response->type > 5) {
         croak $response->response->[0]  . '(' . $response->type . ')';
     }
@@ -85,7 +89,7 @@ sub store {
 sub remove {
     my ( $self, $key ) = @_;
 
-    my $response = $self->r->table( $self->_table )->get( $key )->delete->run;
+    my $response = r->table( $self->_table )->get( $key )->delete->run($self->rethink_io);
 
     if ($response->type > 5) {
         croak $response->response->[0]  . '(' . $response->type . ')';
@@ -97,7 +101,7 @@ sub remove {
 sub clear {
     my ($self) = @_;
 
-    my $response = $self->r->table( $self->_table )->delete->run;
+    my $response = r->table( $self->_table )->delete->run($self->rethink_io);
 
     if ($response->type > 5) {
         croak $response->response->[0]  . '(' . $response->type . ')';
@@ -109,7 +113,7 @@ sub clear {
 sub get_keys {
     my ($self) = @_;
 
-    my $response = $self->r->table( $self->_table )->run;
+    my $response = r->table( $self->_table )->run($self->rethink_io);
 
     if ($response->type > 5) {
         croak $response->response->[0]  . '(' . $response->type . ')';

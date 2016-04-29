@@ -12,6 +12,8 @@ sub new_cache_options {
 
     return (
         $self->SUPER::new_cache_options(),
+        port => $ENV{RETHINKDB_PORT} || 28015,
+        host => $ENV{RETHINKDB_HOST} || 'localhost'
     );
 
 }
