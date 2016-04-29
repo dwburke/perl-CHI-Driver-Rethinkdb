@@ -38,17 +38,14 @@ sub _table {
 sub BUILD {
     my ( $self, $args ) = @_;
 
-    if ( $args->{create_table} ) {
+    my $r = $self->r;
+    my $response = $r
+        ->db( $self->db_name )
+        ->table_create( $self->_table )
+        ->run;
 
-	print "table_prefix: " . $self->table_prefix . "\n";
-	print "_table: " . $self->_table . "\n";
-        my $r = $self->r;
-        my $response = $r
-            ->db( $self->db_name )
-            ->table_create( $self->_table )
-            ->run;
-    
-        if ($response && $response->type > 5) {
+    if ($response && $response->type > 5) {
+        unless ($response->response->[0] =~ /already exists/i) {
             croak $response->response->[0]  . '(' . $response->type . ')';
         }
     }
@@ -65,7 +62,10 @@ sub fetch {
         croak $response->response->[0]  . '(' . $response->type . ')';
     }
 
-    return $response->response->{data};
+    if (my $data = $response->response) {
+        return $data->{data};
+    }
+
 }
 
 sub store {
@@ -106,7 +106,6 @@ sub clear {
     return;
 }
 
-# TODO - shows expired keys, is this fixable?
 sub get_keys {
     my ($self) = @_;
 
@@ -121,8 +120,6 @@ sub get_keys {
 }
 
 sub get_namespaces {
-    my ($self) = @_;
-
     croak 'not supported';
 }
 
