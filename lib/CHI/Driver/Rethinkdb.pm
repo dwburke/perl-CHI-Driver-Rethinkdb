@@ -18,20 +18,19 @@ CHI::Driver::Rethinkdb - Rethinkdb driver for CHI
 
     my $cache = CHI->new(
         driver  => 'Rethinkdb'
+        host    => 'lothal', # default localhost
         port    => 32770, # default 28015
         db_name => 'dev', # default test
     );
 
 =head1 DESCRIPTION
 
-Initial bare documentation...
+This driver uses the Rethinkdb module(s) to communicate
+with Rethinkdb database.
 
-Rethinkdb driver for CHI.
+Rethinkdb is an open-source nosql database.
 
 L<https://www.rethinkdb.com/>
-
-=head1 METHODS
-
 
 =head1 AUTHOR
 
