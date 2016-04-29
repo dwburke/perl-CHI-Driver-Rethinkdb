@@ -22,6 +22,7 @@ sub _build_r {
     DBURKE::Rethink->new(dbname => $self->db_name);
 }
 
+has '+max_key_length'   => ( default => sub { 120 } );
 has db_name      => ( is => 'rw', isa => 'Str', default => sub { 'test2' } );
 has table_prefix => ( is => 'rw', isa => 'Str', default => sub { 'chi_' } );
 
