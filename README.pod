@@ -1,0 +1,45 @@
+=pod
+
+=head1 NAME
+
+CHI::Driver::Rethinkdb - Rethinkdb driver for CHI
+
+=head1 VERSION
+
+version 0.1.0
+
+=head1 SYNOPSIS
+
+    my $cache = CHI->new(
+        driver  => 'Rethinkdb'
+        port    => 32770, # default 28015
+        db_name => 'dev', # default test
+    );
+
+=head1 DESCRIPTION
+
+Initial bare documentation...
+
+Rethinkdb driver for CHI.
+
+L<https://www.rethinkdb.com/>
+
+=head1 METHODS
+
+
+=head1 AUTHOR
+
+Dan Burke C<< dburke at addictmud.org >>
+
+=head1 BUGS
+
+If you encounter any bugs, or have feature requests, please create an issue
+on github. https://github.com/dwburke/perl-CHI-Driver-Rethinkdb/issues
+
+Pull requests also welcome.
+
+=head1 LICENSE AND COPYRIGHT
+
+L<http://www.perlfoundation.org/artistic_license_2_0>
+
+=cut
