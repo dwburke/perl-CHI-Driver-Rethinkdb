@@ -15,7 +15,7 @@ extends 'CHI::Driver';
 #    );
 
 has '+max_key_length'   => ( default => sub { 120 } );
-has db_name      => ( is => 'rw', isa => 'Str', default => sub { 'test2' } );
+has db_name      => ( is => 'rw', isa => 'Str', default => sub { 'test' } );
 has host         => ( is => 'rw', isa => 'Int', default => sub { 'localhost' } );
 has port         => ( is => 'rw', isa => 'Int', default => sub { 28015 } );
 has table_prefix => ( is => 'rw', isa => 'Str', default => sub { 'chi_' } );
