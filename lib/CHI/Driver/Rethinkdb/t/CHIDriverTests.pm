@@ -1,4 +1,5 @@
 package CHI::Driver::Rethinkdb::t::CHIDriverTests;
+
 use strict;
 use warnings;
 use CHI::Test;
