@@ -55,7 +55,7 @@ L<http://www.perlfoundation.org/artistic_license_2_0>
 # Should be 127, but CHI Driver tests failed. some value in between might be ok
 has '+max_key_length'   => ( default => sub { 120 } );
 has db_name      => ( is => 'rw', isa => 'Str', default => sub { 'test' } );
-has host         => ( is => 'rw', isa => 'Int', default => sub { 'localhost' } );
+has host         => ( is => 'rw', isa => 'Str', default => sub { 'localhost' } );
 has port         => ( is => 'rw', isa => 'Int', default => sub { 28015 } );
 has table_prefix => ( is => 'rw', isa => 'Str', default => sub { 'chi_' } );
 has rethink_io   => ( is => 'rw', isa => 'Rethinkdb::IO', lazy => 1, builder => '_build_rethink_io' );
