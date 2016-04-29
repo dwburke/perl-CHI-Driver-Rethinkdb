@@ -14,6 +14,9 @@ extends 'CHI::Driver';
 #        db
 #    );
 
+
+
+# Should be 127, but CHI Driver tests failed. some value in between might be ok
 has '+max_key_length'   => ( default => sub { 120 } );
 has db_name      => ( is => 'rw', isa => 'Str', default => sub { 'test' } );
 has host         => ( is => 'rw', isa => 'Int', default => sub { 'localhost' } );
