@@ -1,0 +1,6 @@
+{
+  "name": "perl-chi-driver-rethinkdb",
+  "tagline": "CHI driver for Rethinkdb",
+  "body": "=pod\r\n\r\n=head1 NAME\r\n\r\nCHI::Driver::Rethinkdb - Rethinkdb driver for CHI\r\n\r\n=head1 VERSION\r\n\r\nversion 0.1.2\r\n\r\n=head1 SYNOPSIS\r\n\r\n    my $cache = CHI->new(\r\n        driver  => 'Rethinkdb'\r\n        host    => 'lothal', # default localhost\r\n        port    => 32770, # default 28015\r\n        db_name => 'dev', # default test\r\n    );\r\n\r\n=head1 DESCRIPTION\r\n\r\nThis driver uses the Rethinkdb module(s) to communicate\r\nwith Rethinkdb database.\r\n\r\nRethinkdb is an open-source nosql database.\r\n\r\nL<https://www.rethinkdb.com/>\r\n\r\n=head1 AUTHOR\r\n\r\nDan Burke C<< dburke at addictmud.org >>\r\n\r\n=head1 BUGS\r\n\r\nIf you encounter any bugs, or have feature requests, please create an issue\r\non github. https://github.com/dwburke/perl-CHI-Driver-Rethinkdb/issues\r\n\r\nPull requests also welcome.\r\n\r\n=head1 LICENSE AND COPYRIGHT\r\n\r\nL<http://www.perlfoundation.org/artistic_license_2_0>\r\n\r\n=cut\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
